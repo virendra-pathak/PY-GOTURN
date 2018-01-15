@@ -118,7 +118,77 @@ class regressor:
             if self.solver_file:
                 self.solver = caffe.SGDSolver(self.solver_file)
                 net = self.solver.net
-                net.copy_from(caffe_model)
+                #net.copy_from(caffe_model)
+
+                ## Assigning the weight from vgg16 pretrained layer to vgg16 feature extractor parallel layers
+                VGG16net = caffe.Net('vgg16 protofile', caffe_model, caffe.TEST)
+                #W = net.params['con_1'][0].data[...]
+                #b = net.params['con_1'][1].data[...]
+                #net = caffe.Net('path/to/conv2.prototxt', 'path/to/conv2.caffemodel', caffe.TEST)
+
+                net.params['conv1_1'][0].data[...] = VGG16net.params['conv1_1'][0].data[...]
+                net.params['conv1_1'][1].data[...] = VGG16net.params['conv1_1'][1].data[...]
+                net.params['conv1_2'][0].data[...] = VGG16net.params['conv1_2'][0].data[...]
+                net.params['conv1_2'][1].data[...] = VGG16net.params['conv1_2'][1].data[...]
+
+                net.params['conv2_1'][0].data[...] = VGG16net.params['conv2_1'][0].data[...]
+                net.params['conv2_1'][1].data[...] = VGG16net.params['conv2_1'][1].data[...]
+                net.params['conv2_2'][0].data[...] = VGG16net.params['conv2_2'][0].data[...]
+                net.params['conv2_2'][1].data[...] = VGG16net.params['conv2_2'][1].data[...]
+
+                net.params['conv3_1'][0].data[...] = VGG16net.params['conv3_1'][0].data[...]
+                net.params['conv3_1'][1].data[...] = VGG16net.params['conv3_1'][1].data[...]
+                net.params['conv3_2'][0].data[...] = VGG16net.params['conv3_2'][0].data[...]
+                net.params['conv3_2'][1].data[...] = VGG16net.params['conv3_2'][1].data[...]
+                net.params['conv3_3'][0].data[...] = VGG16net.params['conv3_3'][0].data[...]
+                net.params['conv3_3'][1].data[...] = VGG16net.params['conv3_3'][1].data[...]
+
+                net.params['conv4_1'][0].data[...] = VGG16net.params['conv4_1'][0].data[...]
+                net.params['conv4_1'][1].data[...] = VGG16net.params['conv4_1'][1].data[...]
+                net.params['conv4_2'][0].data[...] = VGG16net.params['conv4_2'][0].data[...]
+                net.params['conv4_2'][1].data[...] = VGG16net.params['conv4_2'][1].data[...]
+                net.params['conv4_3'][0].data[...] = VGG16net.params['conv4_3'][0].data[...]
+                net.params['conv4_3'][1].data[...] = VGG16net.params['conv4_3'][1].data[...]
+
+                net.params['conv5_1'][0].data[...] = VGG16net.params['conv5_1'][0].data[...]
+                net.params['conv5_1'][1].data[...] = VGG16net.params['conv5_1'][1].data[...]
+                net.params['conv5_2'][0].data[...] = VGG16net.params['conv5_2'][0].data[...]
+                net.params['conv5_2'][1].data[...] = VGG16net.params['conv5_2'][1].data[...]
+                net.params['conv5_3'][0].data[...] = VGG16net.params['conv5_3'][0].data[...]
+                net.params['conv5_3'][1].data[...] = VGG16net.params['conv5_3'][1].data[...]
+
+                ## Adding the below layer now
+                net.params['conv1_1_p'][0].data[...] = VGG16net.params['conv1_1'][0].data[...]
+                net.params['conv1_1_p'][1].data[...] = VGG16net.params['conv1_1'][1].data[...]
+                net.params['conv1_2_p'][0].data[...] = VGG16net.params['conv1_2'][0].data[...]
+                net.params['conv1_2_p'][1].data[...] = VGG16net.params['conv1_2'][1].data[...]
+
+                net.params['conv2_1_p'][0].data[...] = VGG16net.params['conv2_1'][0].data[...]
+                net.params['conv2_1_p'][1].data[...] = VGG16net.params['conv2_1'][1].data[...]
+                net.params['conv2_2_p'][0].data[...] = VGG16net.params['conv2_2'][0].data[...]
+                net.params['conv2_2_p'][1].data[...] = VGG16net.params['conv2_2'][1].data[...]
+
+                net.params['conv3_1_p'][0].data[...] = VGG16net.params['conv3_1'][0].data[...]
+                net.params['conv3_1_p'][1].data[...] = VGG16net.params['conv3_1'][1].data[...]
+                net.params['conv3_2_p'][0].data[...] = VGG16net.params['conv3_2'][0].data[...]
+                net.params['conv3_2_p'][1].data[...] = VGG16net.params['conv3_2'][1].data[...]
+                net.params['conv3_3_p'][0].data[...] = VGG16net.params['conv3_3'][0].data[...]
+                net.params['conv3_3_p'][1].data[...] = VGG16net.params['conv3_3'][1].data[...]
+
+                net.params['conv4_1_p'][0].data[...] = VGG16net.params['conv4_1'][0].data[...]
+                net.params['conv4_1_p'][1].data[...] = VGG16net.params['conv4_1'][1].data[...]
+                net.params['conv4_2_p'][0].data[...] = VGG16net.params['conv4_2'][0].data[...]
+                net.params['conv4_2_p'][1].data[...] = VGG16net.params['conv4_2'][1].data[...]
+                net.params['conv4_3_p'][0].data[...] = VGG16net.params['conv4_3'][0].data[...]
+                net.params['conv4_3_p'][1].data[...] = VGG16net.params['conv4_3'][1].data[...]
+
+                net.params['conv5_1_p'][0].data[...] = VGG16net.params['conv5_1'][0].data[...]
+                net.params['conv5_1_p'][1].data[...] = VGG16net.params['conv5_1'][1].data[...]
+                net.params['conv5_2_p'][0].data[...] = VGG16net.params['conv5_2'][0].data[...]
+                net.params['conv5_2_p'][1].data[...] = VGG16net.params['conv5_2'][1].data[...]
+                net.params['conv5_3_p'][0].data[...] = VGG16net.params['conv5_3'][0].data[...]
+                net.params['conv5_3_p'][1].data[...] = VGG16net.params['conv5_3'][1].data[...]
+                ##
             else:
                 logger.error('solver file required')
                 return
