@@ -121,7 +121,7 @@ class regressor:
                 #net.copy_from(caffe_model)
 
                 ## Assigning the weight from vgg16 pretrained layer to vgg16 feature extractor parallel layers
-                VGG16net = caffe.Net('vgg16 protofile', caffe_model, caffe.TEST)
+                VGG16net = caffe.Net('/home/virendra/dlcv/PY-GOTURN/PY-GOTURN/nets/VGG_ILSVRC_16_layers_deploy.prototxt', caffe_model, caffe.TEST)
                 #W = net.params['con_1'][0].data[...]
                 #b = net.params['con_1'][1].data[...]
                 #net = caffe.Net('path/to/conv2.prototxt', 'path/to/conv2.caffemodel', caffe.TEST)

@@ -1,4 +1,4 @@
-name: "VGG_ILSVRC_16_layers"
+name: "GOTURN_VGG_ILSVRC_16_layers"
 
 input: "target"
 input: "image"
@@ -328,18 +328,6 @@ layers {
     stride: 2
   }
 }
-
-layers {
-  bottom: "pool5"
-  top: "fc6"
-  name: "fc6"
-  type: INNER_PRODUCT
-  inner_product_param {
-    num_output: 4096
-  }
-}
-
-
 
 layers {
   bottom: "image"
