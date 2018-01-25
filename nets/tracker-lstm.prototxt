@@ -472,14 +472,13 @@ layer {
 
 layer {
   name: "lstm1"
-  type: "Lstm"
+  type: "LSTM"
   bottom: "pool5"
   bottom: "pool5_p"
   top: "lstm1"
 
-  lstm_param {
+  recurrent_param {
     num_output: 4
-    clipping_threshold: 0.1
     weight_filler {
       type: "gaussian"
       std: 0.1
