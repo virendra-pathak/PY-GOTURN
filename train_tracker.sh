@@ -1,7 +1,7 @@
-IMAGENET_FOLDER='/media/nrupatunga/LAPTOP_BACKUP/Datasets/ILSVRC2014'
-ALOV_FOLDER='/media/nrupatunga/LAPTOP_BACKUP/Datasets/ALOV'
+IMAGENET_FOLDER='/home/virendra/dlcv/imagenet/new_loc'
+ALOV_FOLDER='/home/virendra/dlcv/alov'
 INIT_CAFFEMODEL='./nets/tracker_init.caffemodel'
-TRACKER_PROTO='./nets/tracker.prototxt'
+TRACKER_PROTO='./nets/tracker-lstm.prototxt'
 SOLVER_PROTO='./nets/solver.prototxt'
 
 python -m goturn.train.train \
