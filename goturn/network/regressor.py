@@ -118,7 +118,48 @@ class regressor:
             if self.solver_file:
                 self.solver = caffe.SGDSolver(self.solver_file)
                 net = self.solver.net
-                net.copy_from(caffe_model)
+                #net.copy_from(caffe_model)
+                ## Assigning the weight from caffenet pretrained layer to lstm-pygotun
+                ## feature extractor parallel layers
+                original_caffenet = caffe.Net(
+                    '/home/virendra/dlcv/PY-GOTURN/PY-GOTURN/nets/VGG_ILSVRC_16_layers_deploy.prototxt', caffe_model,
+                    caffe.TEST)
+                # W = net.params['con_1'][0].data[...]
+                # b = net.params['con_1'][1].data[...]
+                # net = caffe.Net('path/to/conv2.prototxt', 'path/to/conv2.caffemodel', caffe.TEST)
+
+                net.params['conv1'][0].data[...] = original_caffenet.params['conv1'][0].data[...]
+                net.params['conv1'][1].data[...] = original_caffenet.params['conv1'][1].data[...]
+
+                net.params['conv2'][0].data[...] = original_caffenet.params['conv2'][0].data[...]
+                net.params['conv2'][1].data[...] = original_caffenet.params['conv2'][1].data[...]
+
+                net.params['conv3'][0].data[...] = original_caffenet.params['conv3'][0].data[...]
+                net.params['conv3'][1].data[...] = original_caffenet.params['conv3'][1].data[...]
+
+                net.params['conv4'][0].data[...] = original_caffenet.params['conv4'][0].data[...]
+                net.params['conv4'][1].data[...] = original_caffenet.params['conv4'][1].data[...]
+
+                net.params['conv5'][0].data[...] = original_caffenet.params['conv5'][0].data[...]
+                net.params['conv5'][1].data[...] = original_caffenet.params['conv5'][1].data[...]
+
+                ## Adding the below layer now
+                net.params['conv1_p'][0].data[...] = original_caffenet.params['conv1_p'][0].data[...]
+                net.params['conv1_p'][1].data[...] = original_caffenet.params['conv1_p'][1].data[...]
+
+                net.params['conv2_p'][0].data[...] = original_caffenet.params['conv2_p'][0].data[...]
+                net.params['conv2_p'][1].data[...] = original_caffenet.params['conv2_p'][1].data[...]
+
+                net.params['conv3_p'][0].data[...] = original_caffenet.params['conv3_p'][0].data[...]
+                net.params['conv3_p'][1].data[...] = original_caffenet.params['conv3_p'][1].data[...]
+
+                net.params['conv4_p'][0].data[...] = original_caffenet.params['conv4_p'][0].data[...]
+                net.params['conv4_p'][1].data[...] = original_caffenet.params['conv4_p'][1].data[...]
+
+                net.params['conv5_p'][0].data[...] = original_caffenet.params['conv5_p'][0].data[...]
+                net.params['conv5_p'][1].data[...] = original_caffenet.params['conv5_p'][1].data[...]
+
+                ##
             else:
                 logger.error('solver file required')
                 return
