@@ -491,6 +491,33 @@ layer {
 }
 
 layer {
+  name: "clip_bbox"
+  type: "ImageData"
+  top: "dummy"
+  top: "filter_mask"
+
+  image_data_param {
+    source: "lstm_filter_mask.txt"
+    batch_size: 45
+    shuffle: false
+  }
+}
+
+layer {
+  name: "Silence"
+  type: "Silence"
+  bottom: "dummy"
+}
+
+layer {
+name: "filter_lstm1"
+type: "Filter"
+bottom: "lstm1"
+bottom: "filter_mask"
+top: "filter_lstm1"
+}
+
+layer {
   name: "neg"
   bottom: "bbox"
   top: "bbox_neg"
@@ -512,7 +539,7 @@ layer {
 layer {
   name: "subtract"
   type: "Eltwise"
-  bottom: "lstm1"
+  bottom: "filter_lstm1"
   bottom: "bbox_neg_flat"
   top: "out_diff"
 }
