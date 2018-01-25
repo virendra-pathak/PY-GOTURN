@@ -1,4 +1,4 @@
-name: "CaffeNet"
+name: "LSTM_CaffeNet"
 
 input: "target"
 input: "image"
@@ -471,160 +471,21 @@ layer {
 }
 
 layer {
-  name: "concat"
-  type: "Concat"
+  name: "lstm1"
+  type: "Lstm"
   bottom: "pool5"
   bottom: "pool5_p"
-  top: "pool5_concat"
-  concat_param {
-    axis: 1
-  }
-}
+  top: "lstm1"
 
-layer {
-  name: "fc6-new"
-  type: "InnerProduct"
-  bottom: "pool5_concat"
-  top: "fc6"
-  param {
-    lr_mult: 10
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 20
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 4096
-    weight_filler {
-      type: "gaussian"
-      std: 0.005
-    }
-    bias_filler {
-      type: "constant"
-      value: 1
-    }
-  }
-}
-layer {
-  name: "relu6"
-  type: "ReLU"
-  bottom: "fc6"
-  top: "fc6"
-}
-layer {
-  name: "drop6"
-  type: "Dropout"
-  bottom: "fc6"
-  top: "fc6"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layer {
-  name: "fc7-new"
-  type: "InnerProduct"
-  bottom: "fc6"
-  top: "fc7"
-  param {
-    lr_mult: 10
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 20
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 4096
-    weight_filler {
-      type: "gaussian"
-      std: 0.005
-    }
-    bias_filler {
-      type: "constant"
-      value: 1
-    }
-  }
-}
-layer {
-  name: "relu7"
-  type: "ReLU"
-  bottom: "fc7"
-  top: "fc7"
-}
-layer {
-  name: "drop7"
-  type: "Dropout"
-  bottom: "fc7"
-  top: "fc7"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layer {
-  name: "fc7-newb"
-  type: "InnerProduct"
-  bottom: "fc7"
-  top: "fc7b"
-  param {
-    lr_mult: 10
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 20
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 4096
-    weight_filler {
-      type: "gaussian"
-      std: 0.005
-    }
-    bias_filler {
-      type: "constant"
-      value: 1
-    }
-  }
-}
-layer {
-  name: "relu7b"
-  type: "ReLU"
-  bottom: "fc7b"
-  top: "fc7b"
-}
-layer {
-  name: "drop7b"
-  type: "Dropout"
-  bottom: "fc7b"
-  top: "fc7b"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-
-
-layer {
-  name: "fc8-shapes"
-  type: "InnerProduct"
-  bottom: "fc7b"
-  top: "fc8"
-  param {
-    lr_mult: 10
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 20
-    decay_mult: 0
-  }
-  inner_product_param {
+  lstm_param {
     num_output: 4
+    clipping_threshold: 0.1
     weight_filler {
       type: "gaussian"
-      std: 0.01
+      std: 0.1
     }
     bias_filler {
       type: "constant"
-      value: 0
     }
   }
 }
@@ -640,6 +501,7 @@ layer {
     shift: 0
   }
 }
+
 layer {
   name: "flatten"
   type: "Flatten"
@@ -650,10 +512,11 @@ layer {
 layer {
   name: "subtract"
   type: "Eltwise"
-  bottom: "fc8"
+  bottom: "lstm1"
   bottom: "bbox_neg_flat"
   top: "out_diff"
 }
+
 layer {
   name: "abssum"
   type: "Reduction"
@@ -664,4 +527,3 @@ layer {
     operation: 2
   }
 }
-
