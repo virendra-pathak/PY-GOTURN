@@ -537,6 +537,19 @@ layer {
 }
 
 layer {
+  name: "reshape_lstm1"
+  type: "Reshape"
+  bottom: "lstm1"
+  top: "reshape_lstm1"
+  reshape_param {
+    shape {
+      dim: 1
+      dim: 4
+    }
+  }
+}
+
+layer {
   name: "neg"
   bottom: "bbox"
   top: "bbox_neg"
@@ -558,7 +571,7 @@ layer {
 layer {
   name: "subtract"
   type: "Eltwise"
-  bottom: "lstm1"
+  bottom: "reshape_lstm1"
   bottom: "bbox_neg_flat"
   top: "out_diff"
 }
