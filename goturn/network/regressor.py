@@ -97,6 +97,10 @@ class regressor:
             target_out = self.preprocess(target)
             net.blobs['target'].data[i] = target_out
 
+            net.blobs['delta'].data[i] = 1
+            if ((i % 11) == 0):
+               net.blobs['delta'].data[i] = 0 
+
 
     def setupNetwork(self, deploy_proto, caffe_model, gpu_id, do_train):
         """TODO: Docstring for setupNetwork.

@@ -26,8 +26,6 @@ input_dim: 1
 #delta
 input_dim: 1
 input_dim: 1
-input_dim: 1
-input_dim: 1
 
 layer {
   name: "conv1"
@@ -489,39 +487,10 @@ layer {
 }
 
 layer {
-  name: "reshape_pool5_concat"
-  type: "Reshape"
-  bottom: "pool5_concat"
-  top: "reshape_pool5_concat"
-  reshape_param {
-    shape {
-      dim: 1
-      dim: 1
-      dim: 512
-      dim: 6
-      dim: 6
-    }
-  }
-}
-
-layer {
-  name: "reshape_delta"
-  type: "Reshape"
-  bottom: "delta"
-  top: "reshape_delta"
-  reshape_param {
-    shape {
-      dim: 1
-      dim: 1
-    }
-  }
-}
-
-layer {
   name: "lstm1"
   type: "LSTM"
-  bottom: "reshape_pool5_concat"
-  bottom: "reshape_delta"
+  bottom: "pool5_concat"
+  bottom: "delta"
   top: "lstm1"
 
   recurrent_param {
@@ -534,6 +503,33 @@ layer {
       type: "constant"
     }
   }
+}
+
+layer {
+  name: "clip_bbox"
+  type: "ImageData"
+  top: "dummy"
+  top: "filter_mask"
+
+  image_data_param {
+    source: "lstm_filter_mask.txt"
+    batch_size: 45
+    shuffle: false
+  }
+}
+
+layer {
+  name: "Silence"
+  type: "Silence"
+  bottom: "dummy"
+}
+
+layer {
+name: "filter_lstm1"
+type: "Filter"
+bottom: "lstm1"
+bottom: "filter_mask"
+top: "filter_lstm1"
 }
 
 layer {
@@ -558,7 +554,7 @@ layer {
 layer {
   name: "subtract"
   type: "Eltwise"
-  bottom: "lstm1"
+  bottom: "filter_lstm1"
   bottom: "bbox_neg_flat"
   top: "out_diff"
 }
