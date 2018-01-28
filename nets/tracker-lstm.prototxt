@@ -523,7 +523,7 @@ layer {
   top: "lstm1"
 
   recurrent_param {
-    num_output: 20
+    num_output: 1024
     weight_filler {
       type: "gaussian"
       std: 0.1
@@ -542,7 +542,7 @@ layer {
   reshape_param {
     shape {
       dim: 50
-      dim: 20
+      dim: 1024
     }
   }
 }
