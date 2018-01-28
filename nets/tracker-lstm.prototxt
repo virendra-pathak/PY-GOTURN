@@ -6,25 +6,25 @@ input: "bbox"
 input: "delta"
 
 #target
-input_dim: 1
+input_dim: 50
 input_dim: 3
 input_dim: 227
 input_dim: 227
 
 #image
-input_dim: 1
+input_dim: 50
 input_dim: 3
 input_dim: 227
 input_dim: 227
 
 #bbox
-input_dim: 1
+input_dim: 50
 input_dim: 4
 input_dim: 1
 input_dim: 1
 
 #delta
-input_dim: 1
+input_dim: 50
 input_dim: 1
 input_dim: 1
 input_dim: 1
@@ -535,9 +535,22 @@ layer {
 }
 
 layer {
+  name: "reshape_lstm1"
+  type: "Reshape"
+  bottom: "lstm1"
+  top: "reshape_lstm1"
+  reshape_param {
+    shape {
+      dim: 50
+      dim: 20
+    }
+  }
+}
+
+layer {
   name: "fc8-shapes"
   type: "InnerProduct"
-  bottom: "lstm1"
+  bottom: "reshape_lstm1"
   top: "fc8"
   param {
     lr_mult: 10

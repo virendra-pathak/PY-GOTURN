@@ -50,7 +50,7 @@ class regressor:
         num_images = len(images)
         self.reshape_image_inputs(num_images)
         self.preprocess_batch(images, targets)
-        print("set_images finished")
+        #print("set_images finished")
 
 
     def preprocess(self, image):

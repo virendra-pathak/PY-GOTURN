@@ -64,12 +64,12 @@ class regressor_train:
 
         self.set_boxes_gt(bboxes_gt)
         self.regressor.set_images(images, targets)
-        print("before step")
+        #print("before step")
         net = self.solver.net
         #print("print pool5_concat: ", net.pool5_concat)
         ##print("print reshape_pool5_concat: ", net.reshape_pool5_concat)
         self.step()
-        print("after step")
+        #print("after step")
 
     def visualize_train(self):
         net = self.solver.net
