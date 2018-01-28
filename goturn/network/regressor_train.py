@@ -87,4 +87,4 @@ class regressor_train:
         #print("concat shape: ", net.blobs['pool5_concat'].data.shape)
         #print("reshape concat shape: ", net.blobs['reshape_pool5_concat'].data.shape)
         self.solver.step(1)
-        # self.visualize_train()
+        self.visualize_train()
