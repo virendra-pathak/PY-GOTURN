@@ -64,7 +64,12 @@ class regressor_train:
 
         self.set_boxes_gt(bboxes_gt)
         self.regressor.set_images(images, targets)
+        print("before step")
+        net = self.solver.net
+        #print("print pool5_concat: ", net.pool5_concat)
+        ##print("print reshape_pool5_concat: ", net.reshape_pool5_concat)
         self.step()
+        print("after step")
 
     def visualize_train(self):
         net = self.solver.net
@@ -77,6 +82,9 @@ class regressor_train:
         """TODO: Docstring for step.
         :returns: TODO
         """
-
+        #print("in real step")
+        #net = self.solver.net
+        #print("concat shape: ", net.blobs['pool5_concat'].data.shape)
+        #print("reshape concat shape: ", net.blobs['reshape_pool5_concat'].data.shape)
         self.solver.step(1)
         # self.visualize_train()

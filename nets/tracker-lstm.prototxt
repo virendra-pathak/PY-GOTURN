@@ -56,6 +56,7 @@ layer {
     }
   }
 }
+
 layer {
   name: "relu1"
   type: "ReLU"
@@ -496,11 +497,8 @@ layer {
   reshape_param {
     shape {
       dim: 1
-      dim: 1
-      dim: 512
-      dim: 6
-      dim: 6
     }
+    num_axes: 0
   }
 }
 
@@ -512,7 +510,7 @@ layer {
   reshape_param {
     shape {
       dim: 1
-      dim: 1
+      dim: -1
     }
   }
 }
@@ -525,7 +523,7 @@ layer {
   top: "lstm1"
 
   recurrent_param {
-    num_output: 4
+    num_output: 20
     weight_filler {
       type: "gaussian"
       std: 0.1
@@ -537,14 +535,27 @@ layer {
 }
 
 layer {
-  name: "reshape_lstm1"
-  type: "Reshape"
+  name: "fc8-shapes"
+  type: "InnerProduct"
   bottom: "lstm1"
-  top: "reshape_lstm1"
-  reshape_param {
-    shape {
-      dim: 1
-      dim: 4
+  top: "fc8"
+  param {
+    lr_mult: 10
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 20
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
     }
   }
 }
@@ -571,7 +582,7 @@ layer {
 layer {
   name: "subtract"
   type: "Eltwise"
-  bottom: "reshape_lstm1"
+  bottom: "fc8"
   bottom: "bbox_neg_flat"
   top: "out_diff"
 }

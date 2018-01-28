@@ -40,6 +40,7 @@ class regressor:
         net = self.net
         net.blobs['image'].reshape(num_images, self.channels, self.height, self.width)
         net.blobs['target'].reshape(num_images, self.channels, self.height, self.width)
+        net.blobs['delta'].reshape(num_images, 1, 1, 1)
 
 
     def set_images(self, images, targets):
@@ -49,6 +50,7 @@ class regressor:
         num_images = len(images)
         self.reshape_image_inputs(num_images)
         self.preprocess_batch(images, targets)
+        print("set_images finished")
 
 
     def preprocess(self, image):
@@ -89,17 +91,20 @@ class regressor:
         net = self.net
         num_images = len(images_batch)
         for i in range(num_images):
+            #print("i: ", i, " shape of image: ", net.blobs['image'].data.shape)
             image = images_batch[i]
             image_out = self.preprocess(image)
             net.blobs['image'].data[i] = image_out
+            #print("shape of image_out ", image_out.shape)
 
             target = targets_batch[i]
             target_out = self.preprocess(target)
             net.blobs['target'].data[i] = target_out
 
-            net.blobs['delta'].data[i] = 1
+            #print("i: ", i, " shape of delta: ", net.blobs['delta'].data.shape)
+            net.blobs['delta'].data[i][0][0][0] = 1
             if ((i % 11) == 0):
-               net.blobs['delta'].data[i] = 0 
+               net.blobs['delta'].data[i][0][0][0] = 0 
 
 
     def setupNetwork(self, deploy_proto, caffe_model, gpu_id, do_train):
@@ -173,6 +178,7 @@ class regressor:
             self.phase = caffe.TEST
 
         self.net = net
+        print("setupNetwork: net.blobs['image'].data.shape = ", net.blobs['image'].data.shape)
         self.num_inputs = net.blobs['image'].data[...].shape[0]
         self.channels = net.blobs['image'].data[...].shape[1]
         self.height = net.blobs['image'].data[...].shape[2]
@@ -204,6 +210,7 @@ class regressor:
         net.blobs['image'].data.reshape(1, self.channels, self.height, self.width)
         net.blobs['target'].data.reshape(1, self.channels, self.height, self.width)
         net.blobs['bbox'].data.reshape(1, 4, 1, 1)
+        net.blobs['delta'].data.reshape(1, 1, 1, 1)
 
         curr_search_region = self.preprocess(curr_search_region)
         target_region = self.preprocess(target_region)
