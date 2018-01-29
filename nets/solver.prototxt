@@ -8,6 +8,6 @@ max_iter: 450000
 momentum: 0.9
 weight_decay: 0.0005
 snapshot: 20000
-snapshot_prefix: "./dump_model_lstm" # change as per your need
+snapshot_prefix: "./dump_model_2lstm" # change as per your need
 device_id: 0
 solver_mode: GPU
