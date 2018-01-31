@@ -24,8 +24,8 @@ input_dim: 1
 input_dim: 1
 
 #delta
+input_dim: 2
 input_dim: 50
-input_dim: 1
 input_dim: 1
 input_dim: 1
 
@@ -477,23 +477,23 @@ layer {
     stride: 2
   }
 }
-
 layer {
-  name: "concat"
-  type: "Concat"
+  name: "r_pool5"
+  type: "Reshape"
   bottom: "pool5"
-  bottom: "pool5_p"
-  top: "pool5_concat"
-  concat_param {
-    axis: 1
+  top: "r_pool5"
+  reshape_param {
+    shape {
+      dim: 1
+    }
+    num_axes: 0
   }
 }
-
 layer {
-  name: "reshape_pool5_concat"
+  name: "r_pool5_p"
   type: "Reshape"
-  bottom: "pool5_concat"
-  top: "reshape_pool5_concat"
+  bottom: "pool5_p"
+  top: "r_pool5_p"
   reshape_param {
     shape {
       dim: 1
@@ -503,13 +503,24 @@ layer {
 }
 
 layer {
-  name: "reshape_delta"
+  name: "pool5_concat"
+  type: "Concat"
+  bottom: "r_pool5"
+  bottom: "r_pool5_p"
+  top: "pool5_concat"
+  concat_param {
+    axis: 0
+  }
+}
+
+layer {
+  name: "r_delta"
   type: "Reshape"
   bottom: "delta"
-  top: "reshape_delta"
+  top: "r_delta"
   reshape_param {
     shape {
-      dim: 1
+      dim: 2
       dim: -1
     }
   }
@@ -518,8 +529,8 @@ layer {
 layer {
   name: "lstm1"
   type: "LSTM"
-  bottom: "reshape_pool5_concat"
-  bottom: "reshape_delta"
+  bottom: "pool5_concat"
+  bottom: "r_delta"
   top: "lstm1"
 
   recurrent_param {
@@ -530,34 +541,33 @@ layer {
     }
     bias_filler {
       type: "constant"
+      value: 0
     }
   }
 }
 
 layer {
-  name: "lstm2"
-  type: "LSTM"
+  name: "filter_lstm1"
+  type: "Slice"
   bottom: "lstm1"
-  bottom: "reshape_delta"
-  top: "lstm2"
-
-  recurrent_param {
-    num_output: 2048
-    weight_filler {
-      type: "gaussian"
-      std: 0.1
-    }
-    bias_filler {
-      type: "constant"
-    }
+  top: "filter_lstm0"
+  top: "filter_lstm1"
+  slice_param {
+    axis: 0
   }
 }
 
 layer {
-  name: "reshape_lstm2"
+name: "Silence"
+type: "Silence"
+bottom: "filter_lstm0"
+}
+
+layer {
+  name: "reshape_lstm1"
   type: "Reshape"
-  bottom: "lstm2"
-  top: "reshape_lstm2"
+  bottom: "filter_lstm1"
+  top: "reshape_lstm1"
   reshape_param {
     shape {
       dim: 50
@@ -569,7 +579,7 @@ layer {
 layer {
   name: "fc8-shapes"
   type: "InnerProduct"
-  bottom: "reshape_lstm2"
+  bottom: "reshape_lstm1"
   top: "fc8"
   param {
     lr_mult: 10

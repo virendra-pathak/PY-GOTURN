@@ -40,7 +40,7 @@ class regressor:
         net = self.net
         net.blobs['image'].reshape(num_images, self.channels, self.height, self.width)
         net.blobs['target'].reshape(num_images, self.channels, self.height, self.width)
-        net.blobs['delta'].reshape(num_images, 1, 1, 1)
+        net.blobs['delta'].reshape(2, num_images, 1, 1)
 
 
     def set_images(self, images, targets):
@@ -102,9 +102,8 @@ class regressor:
             net.blobs['target'].data[i] = target_out
 
             #print("i: ", i, " shape of delta: ", net.blobs['delta'].data.shape)
-            net.blobs['delta'].data[i][0][0][0] = 1
-            if ((i % 11) == 0):
-               net.blobs['delta'].data[i][0][0][0] = 0 
+            net.blobs['delta'].data[0][i][0][0] = 0
+            net.blobs['delta'].data[1][i][0][0] = 1 
 
 
     def setupNetwork(self, deploy_proto, caffe_model, gpu_id, do_train):
