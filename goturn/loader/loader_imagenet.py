@@ -130,7 +130,9 @@ class loader_imagenet:
             random_ann.disp_height = 375
             random_ann.disp_width = 500
 
-
+	#print("random_ann.image_path: ", random_ann.image_path)
+	#print("imagenet folder: ", self.imagenet_folder)
+	#print("img_path: ", img_path)
         image = cv2.imread(img_path)
 
         img_height = image.shape[0]
